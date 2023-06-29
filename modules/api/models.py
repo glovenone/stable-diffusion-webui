@@ -127,6 +127,28 @@ StableDiffusionImg2ImgProcessingAPI = PydanticModelGenerator(
     ]
 ).generate_model()
 
+# -----------------  new add start -----------------
+StableDiffusionImg2ImgAsyncProcessingAPI = PydanticModelGenerator(
+    "StableDiffusionProcessingImg2ImgAsync",
+    StableDiffusionProcessingImg2Img,
+    [
+        {"key": "sampler_index", "type": str, "default": "Euler"},
+        {"key": "firebase_uid", "type": str, "default": "error_uid"},
+        {"key": "firebase_task_id", "type": str, "default": "error_task_id"},
+        {"key": "init_images", "type": list, "default": None},
+        {"key": "denoising_strength", "type": float, "default": 0.75},
+        {"key": "mask", "type": str, "default": None},
+        {"key": "include_init_images", "type": bool, "default": False, "exclude" : True},
+        {"key": "script_name", "type": str, "default": None},
+        {"key": "script_args", "type": list, "default": []},
+        {"key": "send_images", "type": bool, "default": True},
+        {"key": "save_images", "type": bool, "default": False},
+        {"key": "alwayson_scripts", "type": dict, "default": {}},
+    ]
+).generate_model()
+# -----------------  new add end -----------------
+
+
 class TextToImageResponse(BaseModel):
     images: List[str] = Field(default=None, title="Image", description="The generated image in base64 format.")
     parameters: dict
@@ -241,9 +263,6 @@ class UpscalerItem(BaseModel):
     model_url: Optional[str] = Field(title="URL")
     scale: Optional[float] = Field(title="Scale")
 
-class LatentUpscalerModeItem(BaseModel):
-    name: str = Field(title="Name")
-
 class SDModelItem(BaseModel):
     title: str = Field(title="Title")
     model_name: str = Field(title="Model Name")
@@ -251,10 +270,6 @@ class SDModelItem(BaseModel):
     sha256: Optional[str] = Field(title="sha256 hash")
     filename: str = Field(title="Filename")
     config: Optional[str] = Field(title="Config file")
-
-class SDVaeItem(BaseModel):
-    model_name: str = Field(title="Model Name")
-    filename: str = Field(title="Filename")
 
 class HypernetworkItem(BaseModel):
     name: str = Field(title="Name")
